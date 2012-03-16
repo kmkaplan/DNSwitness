@@ -333,7 +333,7 @@ main(int argc, char *argv[])
     file_params[3] = tmp = malloc(MAX_INTEGER_WIDTH);
     sprintf(tmp, "%i", inputfile->snaplen);
     file_params[4] = tmp = malloc(MAX_INTEGER_WIDTH);
-    sprintf(tmp, "%li", (long int) inputfile->size);
+    sprintf(tmp, "%zu", inputfile->size);
     file_params[5] = tmp = malloc(MAX_TIMESTAMP_WIDTH);
     file_creation = *gmtime(&inputfile->creation);
     strftime(tmp, MAX_TIMESTAMP_WIDTH, ISO_FORMAT, &file_creation);
