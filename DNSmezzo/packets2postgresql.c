@@ -330,17 +330,16 @@ main(int argc, char *argv[])
     if (file_params[1] == NULL)
         fatal("Can not retrieve realpath for %s: %s", filename, strerror(errno));
     file_params[2] = pcap_datalink_val_to_description(inputfile->datalink);
-    file_params[3] = malloc(MAX_INTEGER_WIDTH);
-    sprintf((char *) file_params[3], "%i", inputfile->snaplen);
-    file_params[4] = malloc(MAX_INTEGER_WIDTH);
-    sprintf((char *) file_params[4], "%li", (long int) inputfile->size);
-    file_params[5] = malloc(MAX_TIMESTAMP_WIDTH);
+    file_params[3] = tmp = malloc(MAX_INTEGER_WIDTH);
+    sprintf(tmp, "%i", inputfile->snaplen);
+    file_params[4] = tmp = malloc(MAX_INTEGER_WIDTH);
+    sprintf(tmp, "%li", (long int) inputfile->size);
+    file_params[5] = tmp = malloc(MAX_TIMESTAMP_WIDTH);
     file_creation = *gmtime(&inputfile->creation);
-    strftime((char *) file_params[5], MAX_TIMESTAMP_WIDTH, ISO_FORMAT,
-             &file_creation);
+    strftime(tmp, MAX_TIMESTAMP_WIDTH, ISO_FORMAT, &file_creation);
     if (maxpackets > 0) {
-        file_params[6] = malloc(MAX_INTEGER_WIDTH);
-        sprintf((char *) file_params[6], "%li", maxpackets);
+        file_params[6] = tmp = malloc(MAX_INTEGER_WIDTH);
+        sprintf(tmp, "%li", maxpackets);
     } else {
         file_params[6] = NULL;
     }
@@ -349,8 +348,8 @@ main(int argc, char *argv[])
         if (sampling == NULL) {
             file_params[7] = NULL;
         } else {
-            file_params[7] = malloc(MAX_FLOAT_WIDTH);
-            sprintf((char *) file_params[7], "%f", 1.0 / (*sampling));
+            file_params[7] = tmp = malloc(MAX_FLOAT_WIDTH);
+            sprintf(tmp, "%f", 1.0 / (*sampling));
         }
     } else {
         file_params[7] = NULL;
@@ -575,25 +574,23 @@ main(int argc, char *argv[])
                 " - interrupted before the end because max packets read" : "");
         free(ct);
     }
-    fileend_params[0] = malloc(MAX_INTEGER_WIDTH);
-    fileend_params[1] = malloc(MAX_INTEGER_WIDTH);
-    sprintf((char *) fileend_params[0], "%lu", inputfile->packetnum);
-    sprintf((char *) fileend_params[1], "%lu", inputfile->dnspacketnum);
-    fileend_params[2] = malloc(MAX_TIMESTAMP_WIDTH);
+    fileend_params[0] = tmp = malloc(MAX_INTEGER_WIDTH);
+    sprintf(tmp, "%lu", inputfile->packetnum);
+    fileend_params[1] = tmp = malloc(MAX_INTEGER_WIDTH);
+    sprintf(tmp, "%lu", inputfile->dnspacketnum);
+    fileend_params[2] = tmp = malloc(MAX_TIMESTAMP_WIDTH);
     date_firstpacket = *gmtime(&inputfile->firstpacket.tv_sec);
-    strftime((char *) fileend_params[2], MAX_TIMESTAMP_WIDTH, ISO_FORMAT,
-             &date_firstpacket);
+    strftime(tmp, MAX_TIMESTAMP_WIDTH, ISO_FORMAT, &date_firstpacket);
     if (maxpackets == 0) {      /* Otherwise, the timestamp of the last packet is
                                  * not significant */
-        fileend_params[3] = malloc(MAX_TIMESTAMP_WIDTH);
+        fileend_params[3] = tmp = malloc(MAX_TIMESTAMP_WIDTH);
         date_lastpacket = *gmtime(&inputfile->lastpacket.tv_sec);
-        strftime((char *) fileend_params[3], MAX_TIMESTAMP_WIDTH, ISO_FORMAT,
-                 &date_lastpacket);
+        strftime(tmp, MAX_TIMESTAMP_WIDTH, ISO_FORMAT, &date_lastpacket);
     } else {
         fileend_params[3] = NULL;
     }
-    fileend_params[4] = malloc(MAX_INTEGER_WIDTH);
-    sprintf((char *) fileend_params[4], "%i", file_id);
+    fileend_params[4] = tmp = malloc(MAX_INTEGER_WIDTH);
+    sprintf(tmp, "%i", file_id);
     if (!dry_run) {
         PQclear(result);
         result =
