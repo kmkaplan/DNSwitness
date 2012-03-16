@@ -24,6 +24,7 @@ packets.
 */
 
 /* Standard headers */
+#include <errno.h>
 #include <unistd.h>
 #include <time.h>
 #include <string.h>
@@ -325,8 +326,9 @@ main(int argc, char *argv[])
         fatal("Cannot retrieve host name");
     }
     file_params[0] = hostname;
-    file_params[1] = malloc(PATH_MAX + 1);
-    realpath(filename, (char *) file_params[1]);
+    file_params[1] = realpath(filename, NULL);
+    if (file_params[1] == NULL)
+        fatal("Can not retrieve realpath for %s: %s", filename, strerror(errno));
     file_params[2] = pcap_datalink_val_to_description(inputfile->datalink);
     file_params[3] = malloc(MAX_INTEGER_WIDTH);
     sprintf((char *) file_params[3], "%i", inputfile->snaplen);
