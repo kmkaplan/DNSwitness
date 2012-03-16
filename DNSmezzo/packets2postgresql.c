@@ -229,7 +229,7 @@ int
 main(int argc, char *argv[])
 {
     /* Misc. variables */
-    char           *filename, *ct, *hostname[MAX_NAME], errbuf[PCAP_ERRBUF_SIZE];
+    char           *filename, *ct, hostname[MAX_NAME], errbuf[PCAP_ERRBUF_SIZE];
     pcap_parser_file *inputfile;
     struct dns_packet *packet;
     int             ch;
@@ -320,11 +320,11 @@ main(int argc, char *argv[])
             fatal("Cannot prepare statement: %s", PQresultErrorMessage(result));
         }
     }
-    status = gethostname((char *) hostname, MAX_NAME);
+    status = gethostname(hostname, sizeof(hostname));
     if (status != 0) {
         fatal("Cannot retrieve host name");
     }
-    file_params[0] = (char *) hostname;
+    file_params[0] = hostname;
     file_params[1] = malloc(PATH_MAX + 1);
     realpath(filename, (char *) file_params[1]);
     file_params[2] = pcap_datalink_val_to_description(inputfile->datalink);
